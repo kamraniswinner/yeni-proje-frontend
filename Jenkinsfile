@@ -18,18 +18,17 @@ pipeline {
         stage('Check Frontend Directory') {
             steps {
                 script {
-                    if (fileExists('frontend')) {
-                        echo 'Frontend directory exists.'
-                        sh 'ls -l frontend'
-                        
-                        // Check if package.json exists inside frontend
-                        if (fileExists('frontend/package.json')) {
-                            echo 'package.json exists inside frontend.'
+                    def frontendDir = "${workspace}/frontend"
+                    if (fileExists(frontendDir)) {
+                        echo "Frontend directory exists at ${frontendDir}."
+                        def packageJson = "${frontendDir}/package.json"
+                        if (fileExists(packageJson)) {
+                            echo "package.json found at ${packageJson}."
                         } else {
-                            error 'package.json does not exist inside frontend.'
+                            error "package.json not found at ${packageJson}."
                         }
                     } else {
-                        error 'Frontend directory does not exist.'
+                        error "Frontend directory does not exist at ${frontendDir}."
                     }
                 }
             }
