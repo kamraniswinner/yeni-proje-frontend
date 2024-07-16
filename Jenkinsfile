@@ -15,6 +15,19 @@ pipeline {
             }
         }
 
+        stage('Check Frontend Directory') {
+            steps {
+                script {
+                    if (fileExists('frontend')) {
+                        echo 'Frontend directory exists.'
+                        sh 'ls -l frontend'
+                    } else {
+                        error 'Frontend directory does not exist.'
+                    }
+                }
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
