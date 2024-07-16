@@ -29,24 +29,19 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                script {
-                    dir('frontend') {
-                        // Diagnostic steps to troubleshoot path issues
-                        sh 'echo $PATH'
-                        sh 'node -v'
-                        sh 'npm -v'
-
-                        // Ensure npm is installed and up-to-date
-                        sh 'npm install --silent'
-
-                        // Run npm build script
-                        sh 'npm run build'
-                    }
-                }
+    steps {
+        script {
+            dir('frontend') {
+                sh 'pwd' // Print current directory
+                sh 'ls -la' // List all files and permissions
+                sh 'npm config list' // Print npm configuration
+                sh 'npm install --silent'
+                sh 'npm run build'
             }
         }
-        
+    }
+}
+
 
         stage('Build Docker Image') {
             steps {
