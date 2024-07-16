@@ -21,6 +21,13 @@ pipeline {
                     if (fileExists('frontend')) {
                         echo 'Frontend directory exists.'
                         sh 'ls -l frontend'
+                        
+                        // Check if package.json exists inside frontend
+                        if (fileExists('frontend/package.json')) {
+                            echo 'package.json exists inside frontend.'
+                        } else {
+                            error 'package.json does not exist inside frontend.'
+                        }
                     } else {
                         error 'Frontend directory does not exist.'
                     }
