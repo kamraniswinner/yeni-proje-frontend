@@ -19,16 +19,21 @@ pipeline {
             steps {
                 script {
                     dir('frontend') {
-                        // Add diagnostic steps
+                        // Diagnostic steps to troubleshoot path issues
                         sh 'echo $PATH'
                         sh 'node -v'
                         sh 'npm -v'
-                        sh 'npm install'
+
+                        // Ensure npm is installed and up-to-date
+                        sh 'npm install --silent'
+
+                        // Run npm build script
                         sh 'npm run build'
                     }
                 }
             }
         }
+        
 
         stage('Build Docker Image') {
             steps {
