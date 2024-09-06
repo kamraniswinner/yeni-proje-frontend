@@ -1,11 +1,12 @@
 import axios from 'axios';
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
 
 // Action creator to add shipping information
 export const addShippingInfo = (shippingInfo) => {
   return async (dispatch) => {
     try {
       // Send a POST request to the backend shipping API
-      const response = await axios.post('http://localhost:5000/api/shipping', shippingInfo);
+      const response = await axios.post(`${backendUrl}/api/shipping`, shippingInfo);
       
       // Dispatch an action with the shipping information received from the server
       dispatch({ type: 'ADD_SHIPPING_INFO', payload: response.data });

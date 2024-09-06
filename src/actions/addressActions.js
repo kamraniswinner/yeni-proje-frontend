@@ -1,5 +1,7 @@
 // src/actions/addressActions.js
 import axios from 'axios';
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+
 
 // Action types
 export const CREATE_ADDRESS_REQUEST = 'CREATE_ADDRESS_REQUEST';
@@ -22,7 +24,7 @@ export const DELETE_ADDRESS_FAILURE = 'DELETE_ADDRESS_FAILURE';
 export const createAddress = (address) => async (dispatch) => {
   try {
     dispatch({ type: CREATE_ADDRESS_REQUEST });
-    const { data } = await axios.post('http://localhost:5000/api/address', address);
+    const { data } = await axios.post(`${backendUrl}/api/address`, address);
     dispatch({ type: CREATE_ADDRESS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -36,7 +38,7 @@ export const createAddress = (address) => async (dispatch) => {
 export const fetchAddresses = (userId) => async (dispatch) => {
   try {
     dispatch({ type: FETCH_ADDRESSES_REQUEST });
-    const { data } = await axios.get(`http://localhost:5000/api/address/${userId}`);
+    const { data } = await axios.get(`${backendUrl}/api/address/${userId}`);
     dispatch({ type: FETCH_ADDRESSES_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -50,7 +52,7 @@ export const fetchAddresses = (userId) => async (dispatch) => {
 export const updateAddress = (userId, addressIndex, address) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_ADDRESS_REQUEST });
-    const { data } = await axios.put(`http://localhost:5000/api/address/${userId}/${addressIndex}`, address);
+    const { data } = await axios.put(`${backendUrl}/api/address/${userId}/${addressIndex}`, address);
     dispatch({ type: UPDATE_ADDRESS_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
@@ -64,7 +66,7 @@ export const updateAddress = (userId, addressIndex, address) => async (dispatch)
 export const deleteAddress = (userId, addressIndex) => async (dispatch) => {
   try {
     dispatch({ type: DELETE_ADDRESS_REQUEST });
-    await axios.delete(`/api/addresses/${userId}/${addressIndex}`);
+    await axios.delete(`${backendUrl}/api/addresses/${userId}/${addressIndex}`);
     dispatch({ type: DELETE_ADDRESS_SUCCESS, payload: addressIndex });
   } catch (error) {
     dispatch({

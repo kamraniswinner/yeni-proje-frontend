@@ -1,5 +1,6 @@
 import axios from 'axios';
 import getUserIdFromToken from '../utils/getUserIdFromToken';
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
 
 // actionTypes.js
 export const ADD_FAVOURITE_PRODUCT_REQUEST = 'ADD_FAVOURITE_PRODUCT_REQUEST';
@@ -14,7 +15,7 @@ export const UPDATE_FAVOURITE_PRODUCT_REQUEST = 'UPDATE_FAVOURITE_PRODUCT_REQUES
 export const UPDATE_FAVOURITE_PRODUCT_SUCCESS = 'UPDATE_FAVOURITE_PRODUCT_SUCCESS';
 export const UPDATE_FAVOURITE_PRODUCT_FAILURE = 'UPDATE_FAVOURITE_PRODUCT_FAILURE';
 
-const apiBaseURL = 'http://localhost:5000/api/favourite';
+const apiBaseURL = `${backendUrl}/api/favourite`;
 
 // Add Favourite Product Action
 export const addFavouriteProduct = (prodId) => async (dispatch) => {

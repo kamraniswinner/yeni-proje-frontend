@@ -1,10 +1,11 @@
 import axios from 'axios';
+const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
 
 export const fetchReviews = (productId) => async (dispatch) => {
   try {
     dispatch({ type: 'FETCH_REVIEWS_REQUEST' });
 
-    const response = await axios.get(`http://localhost:5000/api/reviews/${productId}`);
+    const response = await axios.get(`${backendUrl}/api/reviews/${productId}`);
     const reviews = response.data;
 
     dispatch({ type: 'FETCH_REVIEWS_SUCCESS', payload: reviews });
@@ -17,7 +18,7 @@ export const addReview = (productId, reviewData) => async (dispatch) => {
   try {
     dispatch({ type: 'ADD_REVIEW_REQUEST' });
 
-    const response = await axios.post(`http://localhost:5000/api/reviews/${productId}`, reviewData);
+    const response = await axios.post(`${backendUrl}/api/reviews/${productId}`, reviewData);
     const newReview = response.data;
 
     dispatch({ type: 'ADD_REVIEW_SUCCESS', payload: newReview });
