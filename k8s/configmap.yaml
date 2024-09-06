@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: frontend
+data:
+  BACKEND_URL: "http://yeni-proje-backend-service.backend.svc.cluster.local:5000"
