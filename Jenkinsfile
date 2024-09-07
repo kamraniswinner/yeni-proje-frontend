@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "kamran7777777/frontend-image"
+        // Optional: Add default environment variables here
+        // REACT_APP_BACKEND_URL = "http://api.k8s.dearsoft.tech"
     }
 
     stages {
@@ -40,7 +42,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE}:latest ."
+                    // Build the Docker image with the environment variable
+                    sh "docker build --build-arg REACT_APP_BACKEND_URL=http://api.k8s.dearsoft.tech -t ${DOCKER_IMAGE}:latest ."
                 }
             }
         }
@@ -58,6 +61,7 @@ pipeline {
                         echo 'Successfully pushed Docker image to Docker Hub'
                     } catch (Exception e) {
                         echo "Failed to push Docker image to Docker Hub: ${e.message}"
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
