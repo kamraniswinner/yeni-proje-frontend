@@ -4,4 +4,4 @@ metadata:
   name: frontend-config
   namespace: frontend
 data:
-  BACKEND_URL: "http://api.k8s.dearsoft.tech"
+  REACT_APP_BACKEND_URL: "http://api.k8s.dearsoft.tech"
