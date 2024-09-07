@@ -1,5 +1,5 @@
 import axios from 'axios';
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 export const fetchReviews = (productId) => async (dispatch) => {
   try {

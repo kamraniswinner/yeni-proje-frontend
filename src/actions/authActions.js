@@ -1,6 +1,6 @@
 // src/actions/authActions.js
 import axios from 'axios';
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 export const login = (email, password) => async (dispatch) => {
   dispatch({ type: 'LOGIN_REQUEST' });

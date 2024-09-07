@@ -1,6 +1,6 @@
 import axios from 'axios';
 import getUserIdFromToken from '../utils/getUserIdFromToken';
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 // actionTypes.js
 export const ADD_FAVOURITE_PRODUCT_REQUEST = 'ADD_FAVOURITE_PRODUCT_REQUEST';

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import getUserIdFromToken from '../utils/getUserIdFromToken';
-const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
+const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
 
 const ADD_TO_CART_REQUEST = 'ADD_TO_CART_REQUEST';
