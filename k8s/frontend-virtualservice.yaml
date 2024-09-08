@@ -11,8 +11,8 @@ spec:
     - destination:
         host: frontend-service
         subset: stable
-      weight: 90
+      weight: 01
     - destination:
         host: frontend-service
         subset: canary
-      weight: 10
+      weight: 99
