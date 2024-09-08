@@ -6,8 +6,6 @@ metadata:
 spec:
   hosts:
   - "user.k8s.dearsoft.tech" # Your actual domain
-  gateways:
-  - istio-system/istio-ingressgateway  # Reference to the default Istio ingress gateway in the istio-system namespace
   http:
   - route:
     - destination:
