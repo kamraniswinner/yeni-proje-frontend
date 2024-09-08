@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "kamran7777777/frontend-image"
+        DOCKER_IMAGE = "kamran7777777/frontend-image-test"
         // Optional: Add default environment variables here
         // REACT_APP_BACKEND_URL = "http://api.k8s.dearsoft.tech"
     }

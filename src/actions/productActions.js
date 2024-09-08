@@ -13,11 +13,11 @@ export const fetchProducts = () => async (dispatch) => {
   }
 };
 
-export const getProductDetails = (productId) => async (dispatch) => {
+export const getProductDetails = (productnumber) => async (dispatch) => {
   dispatch({ type: 'PRODUCT_DETAILS_REQUEST' });
 
   try {
-    const response = await axios.get(`${backendUrl}/api/products/${productId}`);
+    const response = await axios.get(`${backendUrl}/api/products/${productnumber}`);
     const product = response.data;
     dispatch({ type: 'PRODUCT_DETAILS_SUCCESS', payload: product });
   } catch (error) {

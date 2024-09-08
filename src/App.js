@@ -12,6 +12,7 @@ import Men from './pages/Men';
 import Women from './pages/Women';
 import Kids from './pages/Kids';
 import Contact from './pages/Contact';
+import Productpage from './pages/Productpage';
 import MainLayout from './MainLayout'; // Import the layout
 import PrivateRoute from './PrivateRoute';
 
@@ -100,6 +101,16 @@ const App = () => {
           <PrivateRoute>
             <MainLayout>
               <Contact />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/product/:productNumber"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <Productpage />
             </MainLayout>
           </PrivateRoute>
         }

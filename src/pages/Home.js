@@ -10,7 +10,7 @@ import Title from '../components/Title';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
-//import getUserIdFromToken from '../utils/getUserIdFromToken';
+import { useNavigate } from 'react-router-dom';
 
 const ProductListContainer = styled(Slider)`
   .slick-slide {
@@ -22,12 +22,11 @@ const ProductListContainer = styled(Slider)`
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const productState = useSelector((state) => state.product);
   const { loading, products, error } = productState;
   const favouriteState = useSelector((state) => state.favourite);
   const { favourites } = favouriteState;
-  //const token = localStorage.getItem('token');
-  //const userId = getUserIdFromToken(token);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -37,7 +36,7 @@ const Home = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -61,22 +60,26 @@ const Home = () => {
     <>
       <Heroslider />
       <Title level={1} color="#007bff" align="center" marginBottom="2rem">
-        New Arrivals
+        New Arrivals For You
       </Title>
       <ProductListContainer {...settings}>
         {loading && <p>Loading...</p>}
         {error && <p>{error}</p>}
         {products && products.map((product) => (
-          <Productcard
-            key={product._id}
-            images={product.images}
-            title={product.name}
-            description={product.description}
-            price={`$${product.price}`}
-            onAddToCart={() => handleAddToCart(product._id)}
-            isfavourite={favourites.includes(product._id)}
-            onToggleFavorite={() => handleToggleFavorite(product._id)}
-          />
+          <div key={product._id} onClick={() => {
+            console.log(`Product Number: ${product.productNumber}`);
+            navigate(`/product/${product.productNumber}`);
+          }}>
+            <Productcard
+              images={product.images}
+              title={product.name}
+              description={product.description}
+              price={`$${product.price}`}
+              onAddToCart={() => handleAddToCart(product._id)}
+              isfavourite={favourites.includes(product._id)}
+              onToggleFavorite={() => handleToggleFavorite(product._id)}
+            />
+          </div>
         ))}
       </ProductListContainer>
     </>
