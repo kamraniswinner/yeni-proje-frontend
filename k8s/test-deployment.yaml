@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment-test-branch
+  namespace: frontend
+  labels:
+    app: frontend
+    track: canary
+spec:
+  replicas: 1  # Start with 1 replica for the canary
+  selector:
+    matchLabels:
+      app: frontend
+      track: canary
+  template:
+    metadata:
+      labels:
+        app: frontend
+        track: canary
+    spec:
+      containers:
+      - name: frontend-container
+        image: kamran7777777/frontend-image-test:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-config
+              key: REACT_APP_BACKEND_URL
