@@ -4,6 +4,8 @@ metadata:
   name: frontend-deployment
   labels:
     app: frontend
+    track: stable
+    version: v1 # Add this line
 spec:
   replicas: 2
   selector:
@@ -14,6 +16,7 @@ spec:
       labels:
         app: frontend
         track: stable
+        version: v1 # Add this line
     spec:
       containers:
       - name: frontend-container

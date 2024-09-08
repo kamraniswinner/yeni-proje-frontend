@@ -6,6 +6,7 @@ metadata:
   labels:
     app: frontend
     track: canary
+    version: v1 # Add this line
 spec:
   replicas: 1  # Start with 1 replica for the canary
   selector:
@@ -17,6 +18,7 @@ spec:
       labels:
         app: frontend
         track: canary
+        version: v1 # Add this line
     spec:
       containers:
       - name: frontend-container
