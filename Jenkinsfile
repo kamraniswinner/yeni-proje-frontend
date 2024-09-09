@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "kamran7777777/frontend-image-test"
         SONARQUBE_TOKEN = credentials('056e8765-82cd-40a4-a414-3a52ec80065f')
         SNYK_TOKEN = credentials('21db75b6-b23c-4b44-9e8e-02685993df22')
-        SONAR_HOST_URL = 'http://sonarqube:9000' // Replace with your SonarQube host URL
+        SONAR_HOST_URL = 'http://localhost:9000' // Replace with your SonarQube host URL
         SCANNER_CLI_VERSION = '4.8.0.2856' // Change version as needed
     }
 
@@ -43,6 +43,8 @@ pipeline {
                             echo "SonarQube Scanner is already installed."
                         fi
                     '''
+                    // Ensure sonar-scanner is available in the current shell
+                    sh 'export PATH=$PATH:$PWD/sonar-scanner/bin'
                 }
             }
         }
@@ -63,6 +65,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh """
+                    export PATH=\$PATH:\$PWD/sonar-scanner/bin && \
                     sonar-scanner \
                     -Dsonar.projectKey=your_project_key \
                     -Dsonar.sources=. \
