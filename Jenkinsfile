@@ -113,9 +113,9 @@ pipeline {
                         sh '''
                             if ! [ -x "$(command -v dependency-check.sh)" ]; then
                                 echo "Installing OWASP Dependency-Check..."
-                                wget https://github.com/jeremydmiller/aspnetcore-owasp-dependency-check/releases/download/5.0.1/owasp-dependency-check-5.0.1-release.zip
-                                unzip owasp-dependency-check-5.0.1-release.zip
-                                export PATH=$PATH:$PWD/owasp-dependency-check/bin
+                                wget https://github.com/owasp/dependency-check/releases/download/v6.0.4/dependency-check-6.0.4-release.zip
+                                unzip dependency-check-6.0.4-release.zip
+                                export PATH=$PATH:$PWD/dependency-check/bin
                             fi
                             echo "Running OWASP Dependency-Check..."
                             dependency-check.sh --project "frontend-image-test" --out . --scan . || true
