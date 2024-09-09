@@ -111,13 +111,21 @@ pipeline {
                 script {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         sh '''
-                            if ! [ -x "$(command -v dependency-check.sh)" ]; then
-                                echo "Installing OWASP Dependency-Check..."
-                                wget https://github.com/owasp/dependency-check/releases/download/v6.0.4/dependency-check-6.0.4-release.zip
-                                unzip dependency-check-6.0.4-release.zip
-                                export PATH=$PATH:$PWD/dependency-check/bin
-                            fi
-                            echo "Running OWASP Dependency-Check..."
+                            # Import the GPG key
+                            gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 259A55407DD6C00299E6607EFFDE55BE73A2D1ED
+
+                            # Download Dependency-Check and its signature
+                            wget https://github.com/owasp/dependency-check/releases/download/v10.0.4/dependency-check-10.0.4-release.zip
+                            wget https://github.com/owasp/dependency-check/releases/download/v10.0.4/dependency-check-10.0.4-release.zip.asc
+
+                            # Verify the integrity of the download
+                            gpg --verify dependency-check-10.0.4-release.zip.asc
+
+                            # Extract the zip file
+                            unzip dependency-check-10.0.4-release.zip
+                            export PATH=$PATH:$PWD/dependency-check/bin
+
+                            # Run Dependency-Check
                             dependency-check.sh --project "frontend-image-test" --out . --scan . || true
                         '''
                     }
