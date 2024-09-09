@@ -72,7 +72,8 @@ pipeline {
                     -Dsonar.projectKey=your_project_key \
                     -Dsonar.sources=. \
                     -Dsonar.host.url=${SONAR_HOST_URL} \
-                    -Dsonar.login=${SONARQUBE_TOKEN}
+                    -Dsonar.login=${SONARQUBE_TOKEN} \
+                    -X
                     """
                 }
             }
