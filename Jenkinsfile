@@ -87,6 +87,25 @@ pipeline {
             }
         }
 
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                        sh '''
+                            if ! [ -x "$(command -v trivy)" ]; then
+                                echo "Installing Trivy..."
+                                wget https://github.com/aquasecurity/trivy/releases/download/v0.34.1/trivy_0.34.1_Linux-64bit.deb
+                                dpkg -i trivy_0.34.1_Linux-64bit.deb
+                            else
+                                echo "Trivy is already installed."
+                            fi
+                            trivy image --severity HIGH,CRITICAL ${DOCKER_IMAGE}:latest || true
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
