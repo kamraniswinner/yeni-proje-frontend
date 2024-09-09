@@ -106,6 +106,24 @@ pipeline {
             }
         }
 
+        stage('OWASP Dependency-Check') {
+            steps {
+                script {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                        sh '''
+                            if ! [ -x "$(command -v dependency-check.sh)" ]; then
+                                echo "Dependency-Check CLI is not installed. Please install it manually."
+                                exit 1
+                            else
+                                echo "Running OWASP Dependency-Check..."
+                                dependency-check.sh --project "frontend-image-test" --out . --scan .
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
