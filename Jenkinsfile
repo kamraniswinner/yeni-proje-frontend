@@ -7,6 +7,7 @@ pipeline {
         SONAR_HOST_URL = 'http://localhost:9000' // Replace with your SonarQube host URL
         SCANNER_CLI_VERSION = '4.8.0.2856' // Change version as needed
         JAVA_HOME = '/usr/lib/jvm/java-1.17.0-openjdk-amd64' // Update this path to your Java 17 installation
+        SNYK_TOKEN = credentials('21db75b6-b23c-4b44-9e8e-02685993df22') // Update with your Snyk token
     }
 
     stages {
@@ -61,6 +62,25 @@ pipeline {
                             -Dsonar.sources=. \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
                             -Dsonar.login=${SONARQUBE_TOKEN} || true
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Snyk Vulnerability Scan') {
+            steps {
+                script {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                        sh '''
+                            if ! [ -x "$(command -v snyk)" ]; then
+                                echo "Installing Snyk..."
+                                npm install -g snyk
+                            else
+                                echo "Snyk is already installed."
+                            fi
+                            snyk auth ${SNYK_TOKEN}
+                            snyk test || true
                         '''
                     }
                 }
