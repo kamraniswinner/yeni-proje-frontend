@@ -8,6 +8,7 @@ pipeline {
         SCANNER_CLI_VERSION = '4.8.0.2856' // Change version as needed
         JAVA_HOME = '/usr/lib/jvm/java-1.17.0-openjdk-amd64' // Update this path to your Java 17 installation
         SNYK_TOKEN = credentials('21db75b6-b23c-4b44-9e8e-02685993df22') // Update with your Snyk token
+        DEPENDENCY_CHECK_HOME = "${env.WORKSPACE}/Downloads/dependency-check"
     }
 
     stages {
@@ -111,21 +112,7 @@ pipeline {
                 script {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         sh '''
-                            # Import the GPG key
-                            gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 259A55407DD6C00299E6607EFFDE55BE73A2D1ED
-
-                            # Download Dependency-Check and its signature
-                            wget https://github.com/owasp/dependency-check/releases/download/v10.0.4/dependency-check-10.0.4-release.zip
-                            wget https://github.com/owasp/dependency-check/releases/download/v10.0.4/dependency-check-10.0.4-release.zip.asc
-
-                            # Verify the integrity of the download
-                            gpg --verify dependency-check-10.0.4-release.zip.asc
-
-                            # Extract the zip file
-                            unzip dependency-check-10.0.4-release.zip
-                            export PATH=$PATH:$PWD/dependency-check/bin
-
-                            # Run Dependency-Check
+                            export PATH=$PATH:${DEPENDENCY_CHECK_HOME}/bin
                             dependency-check.sh --project "frontend-image-test" --out . --scan . || true
                         '''
                     }
