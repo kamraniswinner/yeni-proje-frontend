@@ -7,7 +7,7 @@ pipeline {
         SNYK_TOKEN = credentials('21db75b6-b23c-4b44-9e8e-02685993df22')
         SONAR_HOST_URL = 'http://localhost:9000' // Replace with your SonarQube host URL
         SCANNER_CLI_VERSION = '4.8.0.2856' // Change version as needed
-        JAVA_HOME = '/path/to/java-17' // Update this path to Java 17
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk' // Update this path to your Java 17 installation
     }
 
     stages {
@@ -64,18 +64,16 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                script {
-                    withEnv(["JAVA_HOME=${JAVA_HOME}"]) {
-                        withSonarQubeEnv('SonarQube') {
-                            sh """
-                            export PATH=\$PATH:\$PWD/sonar-scanner/bin && \
-                            sonar-scanner \
-                            -Dsonar.projectKey=your_project_key \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONARQUBE_TOKEN}
-                            """
-                        }
+                withEnv(["JAVA_HOME=${JAVA_HOME}"]) {
+                    withSonarQubeEnv('SonarQube') {
+                        sh '''
+                        export PATH=$PATH:$PWD/sonar-scanner/bin
+                        sonar-scanner \
+                        -Dsonar.projectKey=your_project_key \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                        '''
                     }
                 }
             }
@@ -162,4 +160,3 @@ pipeline {
         }
     }
 }
-
