@@ -7,6 +7,7 @@ pipeline {
         SNYK_TOKEN = credentials('21db75b6-b23c-4b44-9e8e-02685993df22')
         SONAR_HOST_URL = 'http://localhost:9000' // Replace with your SonarQube host URL
         SCANNER_CLI_VERSION = '4.8.0.2856' // Change version as needed
+        JAVA_HOME = '/path/to/java-17' // Update this path to Java 17
     }
 
     stages {
@@ -36,17 +37,15 @@ pipeline {
                         if ! [ -x "$(command -v sonar-scanner)" ]; then
                             echo "Installing SonarQube Scanner..."
                             wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip
-                            unzip -o sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip
-                            if [ -d "sonar-scanner" ]; then
-                                echo "Removing existing sonar-scanner directory."
-                                rm -rf sonar-scanner
-                            fi
+                            unzip sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip
                             mv sonar-scanner-${SCANNER_CLI_VERSION}-linux sonar-scanner
+                            export PATH=$PATH:$PWD/sonar-scanner/bin
                         else
                             echo "SonarQube Scanner is already installed."
                         fi
-                        export PATH=$PATH:$PWD/sonar-scanner/bin
                     '''
+                    // Ensure sonar-scanner is available in the current shell
+                    sh 'export PATH=$PATH:$PWD/sonar-scanner/bin'
                 }
             }
         }
@@ -65,16 +64,19 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh """
-                    export PATH=\$PATH:\$PWD/sonar-scanner/bin && \
-                    sonar-scanner \
-                    -Dsonar.projectKey=your_project_key \
-                    -Dsonar.sources=. \
-                    -Dsonar.host.url=${SONAR_HOST_URL} \
-                    -Dsonar.login=${SONARQUBE_TOKEN} \
-                    -X
-                    """
+                script {
+                    withEnv(["JAVA_HOME=${JAVA_HOME}"]) {
+                        withSonarQubeEnv('SonarQube') {
+                            sh """
+                            export PATH=\$PATH:\$PWD/sonar-scanner/bin && \
+                            sonar-scanner \
+                            -Dsonar.projectKey=your_project_key \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONARQUBE_TOKEN}
+                            """
+                        }
+                    }
                 }
             }
         }
@@ -160,3 +162,4 @@ pipeline {
         }
     }
 }
+
