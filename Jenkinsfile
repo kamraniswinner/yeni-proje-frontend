@@ -110,11 +110,8 @@ pipeline {
         stage('OWASP Dependency-Check') {
             steps {
                 script {
-                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                        sh '''
-                            export PATH=$PATH:${DEPENDENCY_CHECK_HOME}/bin
-                            dependency-check.sh --project "frontend-image-test" --out . --scan . || true
-                        '''
+                    withEnv(["PATH+DC=${env.WORKSPACE}/Downloads/dependency-check/bin"]) {
+                        sh 'dependency-check.sh --project frontend-image-test --out . --scan .'
                     }
                 }
             }
