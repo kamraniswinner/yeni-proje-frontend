@@ -110,8 +110,8 @@ pipeline {
         stage('OWASP Dependency-Check') {
             steps {
                 script {
-                    withEnv(["PATH+DC=${env.WORKSPACE}/Downloads/dependency-check/bin"]) {
-                        sh 'dependency-check.sh --project frontend-image-test --out . --scan .'
+                    withEnv(["PATH=/home/kamran1/Downloads/dependency-check/bin:$PATH"]) {
+                        sh '/home/kamran1/Downloads/dependency-check/bin/dependency-check.sh --project frontend-image-test --out . --scan .'
                     }
                 }
             }
