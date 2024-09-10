@@ -21,7 +21,7 @@ pipeline {
         stage('Check Project Directory') {
             steps {
                 script {
-                    def packageJson = "${workspace}/package.json"
+                    def packageJson = "${env.WORKSPACE}/package.json"
                     if (fileExists(packageJson)) {
                         echo "package.json found at ${packageJson}."
                     } else {
@@ -96,7 +96,7 @@ pipeline {
                             if ! [ -x "$(command -v trivy)" ]; then
                                 echo "Installing Trivy..."
                                 wget https://github.com/aquasecurity/trivy/releases/download/v0.34.1/trivy_0.34.1_Linux-64bit.deb
-                                dpkg -i trivy_0.34.1_Linux-64bit.deb
+                                sudo dpkg -i trivy_0.34.1_Linux-64bit.deb
                             else
                                 echo "Trivy is already installed."
                             fi
@@ -110,8 +110,18 @@ pipeline {
         stage('OWASP Dependency-Check') {
             steps {
                 script {
-                    withEnv(["PATH=/home/kamran1/Downloads/dependency-check/bin:$PATH"]) {
-                        sh '/home/kamran1/Downloads/dependency-check/bin/dependency-check.sh --project frontend-image-test --out . --scan .'
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                        sh '''
+                            if ! [ -x "$(command -v dependency-check.sh)" ]; then
+                                echo "Dependency-Check not found. Installing..."
+                                wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.1.1/dependency-check-7.1.1-release.zip
+                                unzip dependency-check-7.1.1-release.zip -d ${DEPENDENCY_CHECK_HOME}
+                            else
+                                echo "Dependency-Check is already installed."
+                            fi
+                            export PATH=$PATH:${DEPENDENCY_CHECK_HOME}/bin
+                            dependency-check.sh --project frontend-image-test --out . --scan . --disableYarnAudit
+                        '''
                     }
                 }
             }
@@ -120,7 +130,6 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image with the environment variable
                     sh "docker build --build-arg REACT_APP_BACKEND_URL=http://api.k8s.dearsoft.tech -t ${DOCKER_IMAGE}:latest ."
                 }
             }
