@@ -127,6 +127,19 @@ pipeline {
             }
         }
 
+        stage('OWASP ZAP Scan') {
+            steps {
+                script {
+                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                        // Run OWASP ZAP scan
+                        sh '''
+                            zap-baseline.py -t http://user.k8s.dearsoft.tech/ -r zap_report.html || true
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
