@@ -48,20 +48,13 @@ pipeline {
                 script {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         sh '''
-                            if ! [ -x "$(command -v sonar-scanner)" ]; then
-                                echo "Installing SonarQube Scanner..."
-                                wget "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip"
-                                unzip "sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip"
-                                mv "sonar-scanner-${SCANNER_CLI_VERSION}-linux" sonar-scanner
-                            else
-                                echo "SonarQube Scanner is already installed."
-                            fi
-                            export PATH=$PATH:${env.WORKSPACE}/sonar-scanner/bin
+                            echo "SonarQube Scanner is already installed."
+                            export PATH=$PATH:/opt/sonar-scanner/bin
                             sonar-scanner \
-                                -Dsonar.projectKey=your_project_key \
-                                -Dsonar.sources=. \
-                                -Dsonar.host.url=${SONAR_HOST_URL} \
-                                -Dsonar.login=${SONARQUBE_TOKEN}
+                            -Dsonar.projectKey=your_project_key \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=${SONAR_HOST_URL} \
+                            -Dsonar.login=${SONARQUBE_TOKEN}
                         '''
                     }
                 }
