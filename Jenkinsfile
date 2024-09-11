@@ -48,13 +48,29 @@ pipeline {
                 script {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         sh '''
+                            echo "Logging versions and environment details:"
+                    
+                            # Log Java version
+                            echo "Java version:"
+                            java -version
+
+                            # Log SonarQube Scanner version
+                            echo "SonarQube Scanner version:"
+                            sonar-scanner -v
+
                             echo "SonarQube Scanner is already installed."
+                    
+                            # Export PATH
                             export PATH=$PATH:/opt/sonar-scanner/bin
+
+                            # Run SonarQube Scanner
+                            echo "Running SonarQube Scanner:"
                             sonar-scanner \
-                            -Dsonar.projectKey=your_project_key \
+                            -Dsonar.projectKey=yeni-proje-frontend-test-branch \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONARQUBE_TOKEN}
+                            -Dsonar.login=${SONARQUBE_TOKEN} \
+                            -X  # Enable debug logging for SonarQube Scanner
                         '''
                     }
                 }
