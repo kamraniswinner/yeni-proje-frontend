@@ -12,6 +12,12 @@ pipeline {
     }
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                deleteDir() // Cleans the workspace before the build starts
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git 'https://github.com/kamraniswinner/yeni-proje-frontend.git'
@@ -49,28 +55,27 @@ pipeline {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         sh '''
                             echo "Logging versions and environment details:"
-                    
+                            
                             # Log Java version
                             echo "Java version:"
                             java -version
-
+                            
                             # Log SonarQube Scanner version
                             echo "SonarQube Scanner version:"
-                            sonar-scanner -v
+                            /opt/sonar-scanner/bin/sonar-scanner -v
 
-                            echo "SonarQube Scanner is already installed."
-                    
-                            # Export PATH
-                            export PATH=$PATH:/opt/sonar-scanner/bin
-
+                            # Print PATH variable for debugging
+                            echo "Current PATH:"
+                            echo $PATH
+                            
                             # Run SonarQube Scanner
                             echo "Running SonarQube Scanner:"
-                            sonar-scanner \
-                            -Dsonar.projectKey=yeni-proje-frontend-test-branch \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONARQUBE_TOKEN} \
-                            -X  # Enable debug logging for SonarQube Scanner
+                            /opt/sonar-scanner/bin/sonar-scanner \
+                                -Dsonar.projectKey=yeni-proje-frontend-test-branch \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=${SONAR_HOST_URL} \
+                                -Dsonar.login=${SONARQUBE_TOKEN} \
+                                -X  # Enable debug logging for SonarQube Scanner
                         '''
                     }
                 }
