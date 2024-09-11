@@ -50,19 +50,18 @@ pipeline {
                         sh '''
                             if ! [ -x "$(command -v sonar-scanner)" ]; then
                                 echo "Installing SonarQube Scanner..."
-                                wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip
-                                unzip sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip
-                                mv sonar-scanner-${SCANNER_CLI_VERSION}-linux sonar-scanner
-                                export PATH=$PATH:$PWD/sonar-scanner/bin
+                                wget "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip"
+                                unzip "sonar-scanner-cli-${SCANNER_CLI_VERSION}-linux.zip"
+                                mv "sonar-scanner-${SCANNER_CLI_VERSION}-linux" sonar-scanner
                             else
                                 echo "SonarQube Scanner is already installed."
                             fi
-                            export PATH=$PATH:$PWD/sonar-scanner/bin
+                            export PATH=$PATH:${env.WORKSPACE}/sonar-scanner/bin
                             sonar-scanner \
-                            -Dsonar.projectKey=your_project_key \
-                            -Dsonar.sources=. \
-                            -Dsonar.host.url=${SONAR_HOST_URL} \
-                            -Dsonar.login=${SONARQUBE_TOKEN} || true
+                                -Dsonar.projectKey=your_project_key \
+                                -Dsonar.sources=. \
+                                -Dsonar.host.url=${SONAR_HOST_URL} \
+                                -Dsonar.login=${SONARQUBE_TOKEN}
                         '''
                     }
                 }
@@ -81,7 +80,7 @@ pipeline {
                                 echo "Snyk is already installed."
                             fi
                             snyk auth ${SNYK_TOKEN}
-                            snyk test || true
+                            snyk test
                         '''
                     }
                 }
@@ -100,7 +99,7 @@ pipeline {
                             else
                                 echo "Trivy is already installed."
                             fi
-                            trivy image --severity HIGH,CRITICAL ${DOCKER_IMAGE}:latest || true
+                            trivy image --severity HIGH,CRITICAL ${DOCKER_IMAGE}:latest
                         '''
                     }
                 }
@@ -133,7 +132,7 @@ pipeline {
                     catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
                         // Run OWASP ZAP scan
                         sh '''
-                            zap-baseline.py -t http://user.k8s.dearsoft.tech/ -r zap_report.html || true
+                            zap-baseline.py -t http://user.k8s.dearsoft.tech/ -r zap_report.html
                         '''
                     }
                 }
