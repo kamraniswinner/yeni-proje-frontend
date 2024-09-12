@@ -93,7 +93,7 @@ pipeline {
                                 -Dsonar.host.url=${SONAR_HOST_URL} \
                                 -Dsonar.login=${SONARQUBE_TOKEN} \
                                 -Dsonar.javascript.node.maxWaitTime=600 \
-                                -Dsonar.nodejs.executable=${SONAR_NODEJS_EXECUTABLE} \  // Added Node.js executable path
+                                -Dsonar.nodejs.executable=${SONAR_NODEJS_EXECUTABLE}   // Added Node.js executable path
                                 -X  # Enable debug logging for SonarQube Scanner
                         '''
                     }
