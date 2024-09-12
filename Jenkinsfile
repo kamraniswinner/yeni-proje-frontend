@@ -9,12 +9,14 @@ pipeline {
         JAVA_HOME = '/usr/lib/jvm/java-1.17.0-openjdk-amd64' // Update this path to your Java 17 installation
         SNYK_TOKEN = credentials('21db75b6-b23c-4b44-9e8e-02685993df22') // Update with your Snyk token
         DEPENDENCY_CHECK_HOME = "${env.WORKSPACE}/Downloads/dependency-check"
+        SONAR_NODEJS_EXECUTABLE = '/usr/bin/node' // Path to Node.js executable
     }
 
     stages {
         stage('Check Node.js Version') {
             steps {
-                sh 'node -v' // Cleans the workspace before the build starts
+                sh 'node -v' // checking node version
+                sh 'npm -v' 
             }
         }
 
@@ -33,6 +35,21 @@ pipeline {
                     } else {
                         error "package.json not found at ${packageJson}."
                     }
+                }
+            }
+        }
+
+        stage('Update Dependencies'){
+            steps {
+                script {
+                    sh '''
+                        echo "Checking for outdated dependencies..."
+                        npm outdated
+                        echo "Updating dependencies..."
+                        npm update
+                        echo "Reinstalling updated dependencies..."
+                        npm install
+                    '''
                 }
             }
         }
@@ -76,6 +93,7 @@ pipeline {
                                 -Dsonar.host.url=${SONAR_HOST_URL} \
                                 -Dsonar.login=${SONARQUBE_TOKEN} \
                                 -Dsonar.javascript.node.maxWaitTime=600 \
+                                -Dsonar.nodejs.executable=${SONAR_NODEJS_EXECUTABLE} \  // Added Node.js executable path
                                 -X  # Enable debug logging for SonarQube Scanner
                         '''
                     }
@@ -95,7 +113,8 @@ pipeline {
                                 echo "Snyk is already installed."
                             fi
                             snyk auth ${SNYK_TOKEN}
-                            snyk test
+                            snyk test --all-projects --json | tee snyk-report.json
+                            cat snyk-report.json
                         '''
                     }
                 }
