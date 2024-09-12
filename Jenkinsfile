@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "kamran7777777/frontend-image-test"
-        SONARQUBE_TOKEN = credentials('sqa_0c30728cbaf927b46d2c074e0d47fc6bd44f5dca') // Update with your SonarQube token
+        SONARQUBE_TOKEN = credentials('squ_32b35f8b18f2f947a120652c4fbf10af2526b7fa') // Update with your SonarQube token
         SONAR_HOST_URL = 'http://localhost:9000' // Replace with your SonarQube host URL
         SCANNER_CLI_VERSION = '4.8.0.2856' // Change version as needed
         JAVA_HOME = '/usr/lib/jvm/java-1.17.0-openjdk-amd64' // Update this path to your Java 17 installation
