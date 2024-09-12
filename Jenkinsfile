@@ -46,7 +46,7 @@ pipeline {
                         echo "Checking for outdated dependencies..."
                         npm outdated
                         echo "Updating dependencies..."
-                        npm update
+                        npm update --silent
                         echo "Reinstalling updated dependencies..."
                         npm install
                     '''
