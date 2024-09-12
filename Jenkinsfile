@@ -12,11 +12,11 @@ pipeline {
     }
 
     stages {
-        //stage('Clean Workspace') {
-            //steps {
-                //deleteDir() // Cleans the workspace before the build starts
-           // }
-        //}
+        stage('Clean Workspace') {
+            steps {
+                deleteDir() // Cleans the workspace before the build starts
+            }
+        }
 
         stage('Checkout') {
             steps {
