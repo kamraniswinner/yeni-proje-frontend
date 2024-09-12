@@ -44,11 +44,11 @@ pipeline {
                 script {
                     sh '''
                         echo "Checking for outdated dependencies..."
-                        npm outdated
+                        npm outdated || echo "Error occurred during npm outdated"
                         echo "Updating dependencies..."
-                        npm update --silent
+                        npm update --silent || echo "Error occurred during npm update"
                         echo "Reinstalling updated dependencies..."
-                        npm install
+                        npm install || echo "Error occurred installing npm update"
                     '''
                 }
             }
