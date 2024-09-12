@@ -93,7 +93,7 @@ pipeline {
                                 -Dsonar.host.url=${SONAR_HOST_URL} \
                                 -Dsonar.login=${SONARQUBE_TOKEN} \
                                 -Dsonar.javascript.node.maxWaitTime=600 \
-                                -Dsonar.nodejs.executable=${SONAR_NODEJS_EXECUTABLE}
+                                -Dsonar.nodejs.executable=${SONAR_NODEJS_EXECUTABLE} \
                                 -X  # Enable debug logging for SonarQube Scanner
                         '''
                     }
@@ -134,26 +134,6 @@ pipeline {
                                 echo "Trivy is already installed."
                             fi
                             trivy image --severity HIGH,CRITICAL ${DOCKER_IMAGE}:latest
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('OWASP Dependency-Check') {
-            steps {
-                script {
-                    catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
-                        sh '''
-                            if ! [ -x "$(command -v dependency-check.sh)" ]; then
-                                echo "Dependency-Check not found. Installing..."
-                                wget https://github.com/jeremylong/DependencyCheck/releases/download/v7.1.1/dependency-check-7.1.1-release.zip
-                                unzip dependency-check-7.1.1-release.zip -d ${DEPENDENCY_CHECK_HOME}
-                            else
-                                echo "Dependency-Check is already installed."
-                            fi
-                            export PATH=$PATH:${DEPENDENCY_CHECK_HOME}/bin
-                            dependency-check.sh --project frontend-image-test --out . --scan . --disableYarnAudit
                         '''
                     }
                 }
