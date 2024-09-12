@@ -12,9 +12,9 @@ pipeline {
     }
 
     stages {
-        stage('Clean Workspace') {
+        stage('Check Node.js Version') {
             steps {
-                deleteDir() // Cleans the workspace before the build starts
+                sh 'node -v' // Cleans the workspace before the build starts
             }
         }
 
@@ -75,6 +75,7 @@ pipeline {
                                 -Dsonar.sources=. \
                                 -Dsonar.host.url=${SONAR_HOST_URL} \
                                 -Dsonar.login=${SONARQUBE_TOKEN} \
+                                -Dsonar.javascript.node.maxWaitTime=600 \
                                 -X  # Enable debug logging for SonarQube Scanner
                         '''
                     }
